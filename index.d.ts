@@ -1,4 +1,4 @@
-declare module "jrburim@react-native-switch-selector" {
+declare module "@jrburim/react-native-switch-selector" {
   import { Component } from "react";
   import {    
     EasingFunction,
