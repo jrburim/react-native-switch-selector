@@ -1,6 +1,6 @@
 {
-    "name": "@jkdrangel/react-native-switch-selector",
-    "version": "2.0.7",
+    "name": "@jrburim/react-native-switch-selector",
+    "version": "2.0.8",
     "description": "Switch Selector to React Native.",
     "main": "index.js",
     "scripts": {
