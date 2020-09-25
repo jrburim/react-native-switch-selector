@@ -98,7 +98,7 @@ export default class SwitchSelector extends Component {
     Animated.timing(this.animatedValue, {
       toValue: value,
       duration: animationDuration,
-      easing: Easing.cubic,
+      easing: this.animationEasing || Easing.cubic,
       useNativeDriver: true,
     }).start();
   };
@@ -143,12 +143,18 @@ export default class SwitchSelector extends Component {
       disabled,
       buttonMargin,
       options,
+      animationEasing,
+      separatorColor, 
     } = this.props;
+    
+    this.animationEasing = animationEasing;
 
     const { selected, sliderWidth } = this.state;
 
     const optionsMap = options.map((element, index) => {
       const isSelected = selected === index;
+      const showSeparator = isSelected || index === selected+1;      
+
 
       return (
         <TouchableOpacity
@@ -190,6 +196,16 @@ export default class SwitchSelector extends Component {
           >
             {element.label}
           </Text>
+          { separatorColor && index != 0 && (
+              <View style={
+              {
+                  borderLeftWidth:1,
+                  borderLeftColor: separatorColor,
+                  position:'absolute', 
+                  left:0, 
+                  opacity: showSeparator ? 0 : 1}}>
+                  <Text style={{fontSize}}></Text>
+            </View>)}                    
         </TouchableOpacity>
       );
     });

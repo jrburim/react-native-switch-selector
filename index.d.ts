@@ -1,6 +1,8 @@
 declare module "react-native-switch-selector" {
   import { Component } from "react";
   import {
+    Easing,
+    EasingFunction,
     ImageStyle,
     RegisteredStyle,
     TextStyle,
@@ -42,6 +44,8 @@ declare module "react-native-switch-selector" {
     returnObject?: boolean;
     disabled?: boolean;
     disableValueChangeOnPress?: boolean;
+    animationEasing?: EasingFunction;
+    separatorColor?:string;    
   }
 
   class SwitchSelector extends Component<ISwitchSelectorProps> {
