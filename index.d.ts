@@ -1,7 +1,6 @@
 declare module "react-native-switch-selector" {
   import { Component } from "react";
-  import {
-    Easing,
+  import {    
     EasingFunction,
     ImageStyle,
     RegisteredStyle,

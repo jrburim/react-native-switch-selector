@@ -101,6 +101,8 @@ const options = [
 | returnObject               | bool                    | false       | false    | Indicate if onPress function return an option instead of option.value            |
 | disabled                   | bool                    | false       | false    | Disables the switch                                                              |
 | borderWidth                | number                  | 1           | false    | Define border width
+| animationEasing            | EasingFunction          | Easing.cubic | false    | Easing function used in Animation
+| separatorColor            | string          | undefined | false    | Color of separator between switch options, if omitted a separator will not be show
 
 ### Authors
 
