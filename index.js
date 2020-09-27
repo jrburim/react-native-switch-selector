@@ -103,22 +103,48 @@ export default class SwitchSelector extends Component {
     }).start();
   };
 
+  shake = (last) => {
+    const { options } = this.props;
+    console.log(`last: ${last}`);
+    const delta = 1 / (40);
+    console.log(`delta: ${delta}`);
+
+    Animated.sequence([
+      Animated.timing(this.animatedValue, { toValue: last + delta, duration: 50, useNativeDriver: true }),
+      Animated.timing(this.animatedValue, { toValue: last - delta, duration: 50, useNativeDriver: true }),
+      Animated.timing(this.animatedValue, { toValue: last + delta, duration: 50, useNativeDriver: true }),
+      Animated.timing(this.animatedValue, { toValue: last, duration: 50, useNativeDriver: true }),
+    ]).start();
+  }
+
   toggleItem = (index, callOnPress = true) => {
     const { selected } = this.state;
-    const { options, returnObject, onPress } = this.props;
+    const {
+      options, returnObject, onPress, onPressDisabled,
+    } = this.props;
     if (options.length <= 1 || index === null || isNaN(index)) return;
-    this.animate(
-      I18nManager.isRTL ? -(index / options.length) : index / options.length,
-      I18nManager.isRTL
+
+    if (options[index].disabled === true) {
+      this.shake(I18nManager.isRTL
         ? -(selected / options.length)
-        : selected / options.length,
-    );
-    if (callOnPress && onPress) {
-      onPress(returnObject ? options[index] : options[index].value);
+        : selected / options.length);
+      if (callOnPress && onPressDisabled) {
+        onPressDisabled(returnObject ? options[index] : options[index].value);
+      }
     } else {
-      console.log('Call onPress with value: ', options[index].value);
+      this.animate(
+        I18nManager.isRTL ? -(index / options.length) : index / options.length,
+        I18nManager.isRTL
+          ? -(selected / options.length)
+          : selected / options.length,
+      );
+      if (callOnPress && onPress) {
+        onPress(returnObject ? options[index] : options[index].value);
+      } else {
+        console.log('Call onPress with value: ', options[index].value);
+      }
+      this.setState({ selected: index });
     }
-    this.setState({ selected: index });
   };
 
   render() {
@@ -130,6 +156,7 @@ export default class SwitchSelector extends Component {
       selectedTextContainerStyle,
       imageStyle,
       textColor,
+      textDisabledColor,
       selectedColor,
       fontSize,
       backgroundColor,
@@ -144,17 +171,18 @@ export default class SwitchSelector extends Component {
       buttonMargin,
       options,
       animationEasing,
-      separatorColor, 
+      separatorColor,
     } = this.props;
-    
+
     this.animationEasing = animationEasing;
 
     const { selected, sliderWidth } = this.state;
 
+    console.log(`selected: ${selected}`);
+
     const optionsMap = options.map((element, index) => {
       const isSelected = selected === index;
-      const showSeparator = isSelected || index === selected+1;      
-
+      const showSeparator = isSelected || index === selected + 1;
 
       return (
         <TouchableOpacity
@@ -188,7 +216,7 @@ export default class SwitchSelector extends Component {
                 fontSize,
                 fontWeight: bold ? 'bold' : 'normal',
                 textAlign: 'center',
-                color: isSelected ? selectedColor : textColor,
+                color: element.disabled ? textDisabledColor : (isSelected ? selectedColor : textColor),
                 backgroundColor: 'transparent',
               },
               isSelected ? selectedTextStyle : textStyle,
@@ -197,15 +225,19 @@ export default class SwitchSelector extends Component {
             {element.label}
           </Text>
           { separatorColor && index != 0 && (
-              <View style={
+          <View style={
               {
-                  borderLeftWidth:1,
-                  borderLeftColor: separatorColor,
-                  position:'absolute', 
-                  left:0, 
-                  opacity: showSeparator ? 0 : 1}}>
-                  <Text style={{fontSize}}></Text>
-            </View>)}                    
+                borderLeftWidth: 1,
+                borderLeftColor: separatorColor,
+                position: 'absolute',
+                left: 0,
+                opacity: showSeparator ? 0 : 1,
+              }
+}
+          >
+            <Text style={{ fontSize }} />
+          </View>
+          )}
         </TouchableOpacity>
       );
     });
@@ -284,6 +316,7 @@ SwitchSelector.defaultProps = {
   imageStyle: {},
   options: [],
   textColor: '#000000',
+  textDisabledColor: '#C9C9C9',
   selectedColor: '#FFFFFF',
   fontSize: 14,
   backgroundColor: '#FFFFFF',
@@ -303,6 +336,7 @@ SwitchSelector.defaultProps = {
   initial: -1,
   value: 1,
   onPress: null,
+  onPressDisabled: null,
 };
 
 SwitchSelector.propTypes = {
@@ -314,6 +348,7 @@ SwitchSelector.propTypes = {
   imageStyle: PropTypes.object,
   options: PropTypes.array,
   textColor: PropTypes.string,
+  textDisabledColor: PropTypes.string,
   selectedColor: PropTypes.string,
   fontSize: PropTypes.number,
   backgroundColor: PropTypes.string,
@@ -333,4 +368,5 @@ SwitchSelector.propTypes = {
   initial: PropTypes.number,
   value: PropTypes.number,
   onPress: PropTypes.func,
+  onPressDisabled: PropTypes.func,
 };

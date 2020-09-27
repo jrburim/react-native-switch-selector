@@ -21,6 +21,7 @@ declare module "@jrburim/react-native-switch-selector" {
     initial?: number;
     value?: number;
     onPress(value: string | number | ISwitchSelectorOption): void;
+    onPressDisabled?(value: string | number | ISwitchSelectorOption): void;
     fontSize?: number;
     selectedColor?: string;
     buttonMargin?: number;
